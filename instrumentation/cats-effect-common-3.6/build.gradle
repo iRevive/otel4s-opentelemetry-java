@@ -1,0 +1,33 @@
+plugins {
+    id("scala")
+}
+
+/*
+dependencies {
+    testCompileOnly("org.scala-lang:scala-library:2.11.12")
+}
+
+tasks {
+    // Gradle sets scala compiler version to toolchain version, not target version
+    // https://github.com/gradle/gradle/issues/18211
+    withType<ScalaCompile>().configureEach {
+        scalaCompileOptions.apply {
+            additionalParameters = additionalParameters.orEmpty() + "-target:jvm-1.8"
+        }
+    }
+}
+*/
+
+apply from: "$rootDir/gradle/instrumentation.gradle"
+
+def scalaVersion = "2.13"
+def catsEffectVersion = "3.6.0"
+
+dependencies {
+    // we need access to the "application.io.opentelemetry.context.Context"
+    // to properly bridge fiber and agent context storages
+    compileOnly project(path: ":opentelemetry-api-shaded-for-instrumenting", configuration: "shadow")
+    compileOnly("io.opentelemetry.javaagent.instrumentation:opentelemetry-javaagent-opentelemetry-api-1.0:${versions.opentelemetryJavaagentAlpha}")
+
+    compileOnly("org.typelevel:cats-effect_$scalaVersion:$catsEffectVersion")
+}

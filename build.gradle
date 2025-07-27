@@ -1,0 +1,97 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+      name = "sonatype"
+      url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+  }
+  dependencies {
+    classpath "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
+    classpath "com.gradleup.shadow:shadow-gradle-plugin:8.3.8"
+    classpath "io.opentelemetry.instrumentation:gradle-plugins:2.18.1-alpha"
+  }
+}
+
+plugins {
+  id("io.github.gradle-nexus.publish-plugin")
+}
+
+group 'io.github.irevive'
+version '0.0.1'
+
+nexusPublishing {
+  packageGroup.set("io.github.irevive")
+
+  repositories {
+    // see https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
+    sonatype {
+      nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+      username.set(System.getenv("SONATYPE_USER"))
+      password.set(System.getenv("SONATYPE_KEY"))
+    }
+  }
+}
+
+subprojects {
+  version = rootProject.version
+
+  apply plugin: "java"
+  apply plugin: "com.diffplug.spotless"
+
+  ext {
+    versions = [
+      // this line is managed by .github/scripts/update-sdk-version.sh
+      opentelemetrySdk           : "1.52.0",
+
+      // these lines are managed by .github/scripts/update-version.sh
+      opentelemetryJavaagent     : "2.18.1",
+      opentelemetryJavaagentAlpha: "2.18.1-alpha",
+
+      autoservice                : "1.1.1"
+    ]
+
+    deps = [
+      autoservice: [
+        "com.google.auto.service:auto-service:${versions.autoservice}",
+        "com.google.auto.service:auto-service-annotations:${versions.autoservice}",
+      ]
+    ]
+  }
+
+  repositories {
+    mavenCentral()
+    maven {
+      name = "sonatype"
+      url = uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+  }
+
+  dependencies {
+    implementation(platform("io.opentelemetry:opentelemetry-bom:${versions.opentelemetrySdk}"))
+
+    // these serve as a test of the instrumentation boms
+    implementation(platform("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:${versions.opentelemetryJavaagent}"))
+    implementation(platform("io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom-alpha:${versions.opentelemetryJavaagentAlpha}"))
+
+    testImplementation("org.mockito:mockito-core:5.18.0")
+
+    testImplementation(enforcedPlatform("org.junit:junit-bom:5.13.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  }
+
+  tasks {
+    test {
+      useJUnitPlatform()
+    }
+
+    compileJava {
+      options.release.set(8)
+    }
+  }
+}

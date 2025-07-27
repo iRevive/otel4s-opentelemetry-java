@@ -1,0 +1,62 @@
+plugins {
+    id("scala")
+}
+
+apply from: "$rootDir/gradle/instrumentation.gradle"
+
+def scalaVersion = "2.13"
+def catsEffectVersion = "3.6.0"
+
+muzzle {
+    pass {
+        group.set("org.typelevel")
+        module.set("cats-effect_2.12")
+        versions.set("[$catsEffectVersion,)")
+        assertInverse.set(true)
+        extraDependency("io.opentelemetry:opentelemetry-api:1.0.0")
+        excludeInstrumentationName("opentelemetry-api")
+    }
+    pass {
+        group.set("org.typelevel")
+        module.set("cats-effect_2.13")
+        versions.set("[$catsEffectVersion,)")
+        assertInverse.set(true)
+        extraDependency("io.opentelemetry:opentelemetry-api:1.0.0")
+        excludeInstrumentationName("opentelemetry-api")
+    }
+    pass {
+        group.set("org.typelevel")
+        module.set("cats-effect_3")
+        versions.set("[$catsEffectVersion,)")
+        assertInverse.set(true)
+        extraDependency("io.opentelemetry:opentelemetry-api:1.0.0")
+        excludeInstrumentationName("opentelemetry-api")
+    }
+}
+
+dependencies {
+    compileOnly project(":bootstrap")
+
+    // we need access to the "application.io.opentelemetry.context.Context"
+    // to properly bridge fiber and agent context storages
+    //compileOnly(project(":opentelemetry-api-shaded-for-instrumenting", configuration = "shadow"))
+    compileOnly project(path: ":opentelemetry-api-shaded-for-instrumenting", configuration: "shadow")
+    implementation("io.opentelemetry.javaagent.instrumentation:opentelemetry-javaagent-opentelemetry-api-1.0:${versions.opentelemetryJavaagentAlpha}")
+    compileOnly("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling")
+    compileOnly("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure")
+    //implementation(project(":instrumentation:opentelemetry-api:opentelemetry-api-1.0:javaagent"))
+
+    compileOnly(project(":instrumentation:cats-effect-common-3.6"))
+    implementation(project(":instrumentation:cats-effect-common-3.6"))
+
+    compileOnly("org.typelevel:cats-effect_$scalaVersion:$catsEffectVersion")
+
+    testImplementation("org.typelevel:cats-effect_$scalaVersion:$catsEffectVersion")
+
+    //latestDepTestLibrary("org.typelevel:cats-effect_$scalaVersion:latest.release")
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs "-Dio.opentelemetry.javaagent.shaded.io.opentelemetry.context.enableStrictContext=false"
+    jvmArgs "-Dcats.effect.trackFiberContext=true"
+}
