@@ -30,7 +30,6 @@ dependencies {
 
     // we need access to the "application.io.opentelemetry.context.Context"
     // to properly bridge fiber and agent context storages
-    //compileOnly(project(":opentelemetry-api-shaded-for-instrumenting", configuration = "shadow"))
     compileOnly project(path: ":opentelemetry-api-shaded-for-instrumenting", configuration: "shadow")
     implementation("io.opentelemetry.javaagent.instrumentation:opentelemetry-javaagent-opentelemetry-api-1.0:${versions.opentelemetryJavaagentAlpha}")
     compileOnly("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling")
@@ -39,14 +38,14 @@ dependencies {
     compileOnly(project(":instrumentation:cats-effect-common-3.6"))
     implementation(project(":instrumentation:cats-effect-common-3.6"))
 
-
-        // otel4s
+    // otel4s
     compileOnly("org.typelevel:otel4s-oteljava-context-storage_$scalaVersion:$otel4sVersion")
 
+    testImplementation("org.typelevel:otel4s-oteljava_$scalaVersion:$otel4sVersion")
     testImplementation("org.typelevel:otel4s-oteljava-context-storage_$scalaVersion:$otel4sVersion")
 
     // bring cats-effect instrumentation
-    //testInstrumentation(project(":instrumentation:cats-effect-3.6"))
+    testInstrumentation(project(":instrumentation:cats-effect-3.6"))
 }
 
 tasks.withType(Test).configureEach {
