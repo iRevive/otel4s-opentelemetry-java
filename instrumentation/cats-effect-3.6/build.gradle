@@ -34,26 +34,25 @@ muzzle {
     }
 }
 
+tasks.named('compileJava') {
+    dependsOn(":instrumentation:cats-effect-common-3.6:byteBuddyJava")
+}
+
 dependencies {
-    compileOnly project(":bootstrap")
+    compileOnly(project(":bootstrap"))
 
     // we need access to the "application.io.opentelemetry.context.Context"
     // to properly bridge fiber and agent context storages
-    //compileOnly(project(":opentelemetry-api-shaded-for-instrumenting", configuration = "shadow"))
-    compileOnly project(path: ":opentelemetry-api-shaded-for-instrumenting", configuration: "shadow")
-    implementation("io.opentelemetry.javaagent.instrumentation:opentelemetry-javaagent-opentelemetry-api-1.0:${versions.opentelemetryJavaagentAlpha}")
+    compileOnly(project(path: ":opentelemetry-api-shaded-for-instrumenting", configuration: "shadow"))
+    implementation("io.opentelemetry.javaagent.instrumentation:opentelemetry-javaagent-opentelemetry-api-1.0")
     compileOnly("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling")
     compileOnly("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure")
-    //implementation(project(":instrumentation:opentelemetry-api:opentelemetry-api-1.0:javaagent"))
 
-    compileOnly(project(":instrumentation:cats-effect-common-3.6"))
     implementation(project(":instrumentation:cats-effect-common-3.6"))
 
     compileOnly("org.typelevel:cats-effect_$scalaVersion:$catsEffectVersion")
 
     testImplementation("org.typelevel:cats-effect_$scalaVersion:$catsEffectVersion")
-
-    //latestDepTestLibrary("org.typelevel:cats-effect_$scalaVersion:latest.release")
 }
 
 tasks.withType(Test).configureEach {

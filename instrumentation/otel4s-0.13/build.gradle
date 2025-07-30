@@ -30,7 +30,6 @@ dependencies {
 
     // we need access to the "application.io.opentelemetry.context.Context"
     // to properly bridge fiber and agent context storages
-    //compileOnly(project(":opentelemetry-api-shaded-for-instrumenting", configuration = "shadow"))
     compileOnly project(path: ":opentelemetry-api-shaded-for-instrumenting", configuration: "shadow")
     implementation("io.opentelemetry.javaagent.instrumentation:opentelemetry-javaagent-opentelemetry-api-1.0:${versions.opentelemetryJavaagentAlpha}")
     compileOnly("io.opentelemetry.javaagent:opentelemetry-javaagent-tooling")
