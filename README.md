@@ -110,3 +110,14 @@ $ export SMOKE_TEST_SCALA_VERSION=3
 $ ./gradlew smoke-tests-images:http4s:jibDockerBuild -Djib.dockerClient.executable=$(which docker)                         
 $ ./gradlew smoke-tests:build
 ```
+
+## New version release
+
+```shell
+$ SDK_VERSION="1.52.0"
+$ AGENT_VERSION="2.18.2"
+$ RELEASE_VERSION="0.0.2"
+$ ./scripts/update-sdk-version.sh $SDK_VERSION
+$ ./scripts/update-version.sh $AGENT_VERSION
+$ ./scripts/update-release-version.sh RELEASE_VERSION
+```

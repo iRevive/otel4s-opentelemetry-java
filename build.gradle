@@ -20,11 +20,13 @@ plugins {
   id("io.github.gradle-nexus.publish-plugin")
 }
 
-group 'io.github.irevive'
-version '0.0.1'
+group "io.github.irevive"
+
+// this line is managed by ./scripts/update-release-version.sh
+version "0.0.1"
 
 nexusPublishing {
-  packageGroup.set("io.github.irevive")
+  packageGroup.set(rootProject.group.toString())
 
   repositories {
     // see https://central.sonatype.org/publish/publish-portal-ossrh-staging-api/#configuration
@@ -39,16 +41,17 @@ nexusPublishing {
 
 subprojects {
   version = rootProject.version
+  group = rootProject.group
 
   apply plugin: "java"
   apply plugin: "com.diffplug.spotless"
 
   ext {
     versions = [
-      // this line is managed by .github/scripts/update-sdk-version.sh
+      // this line is managed by ./scripts/update-sdk-version.sh
       opentelemetrySdk           : "1.52.0",
 
-      // these lines are managed by .github/scripts/update-version.sh
+      // these lines are managed by ./scripts/update-agent-version.sh
       opentelemetryJavaagent     : "2.18.1",
       opentelemetryJavaagentAlpha: "2.18.1-alpha",
 

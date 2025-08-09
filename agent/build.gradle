@@ -154,7 +154,7 @@ tasks {
   publishing {
     publications {
       maven(MavenPublication) {
-        groupId = "io.github.irevive"
+        groupId = project.group.toString()
         artifactId = "otel4s-opentelemetry-javaagent"
         version = project.version.toString()
 
