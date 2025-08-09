@@ -33,5 +33,5 @@ jobs:
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
           SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
-          SONATYPE_KEY: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_KEY: ${{ secrets.SONATYPE_KEY }}
         run: ./gradlew assemble publishToSonatype closeAndReleaseSonatypeStagingRepository
