@@ -23,7 +23,7 @@ plugins {
 group "io.github.irevive"
 
 // this line is managed by ./scripts/update-release-version.sh
-version "0.0.1"
+version "0.0.2"
 
 nexusPublishing {
   packageGroup.set(rootProject.group.toString())
