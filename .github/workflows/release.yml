@@ -29,4 +29,9 @@ jobs:
           cache-disabled: "true"
 
       - name: Publish
+        env:
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+          SONATYPE_USER: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_KEY: ${{ secrets.SONATYPE_USER }}
         run: ./gradlew assemble publishToSonatype closeAndReleaseSonatypeStagingRepository
