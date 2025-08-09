@@ -121,3 +121,9 @@ $ ./scripts/update-sdk-version.sh $SDK_VERSION
 $ ./scripts/update-version.sh $AGENT_VERSION
 $ ./scripts/update-release-version.sh RELEASE_VERSION
 ```
+
+Once the CI is green, you can publish a tag:
+```shell
+$ git tag -a v0.0.2 -m "v0.0.2"
+$ git push origin v0.0.2
+```
