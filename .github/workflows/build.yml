@@ -11,25 +11,28 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu]
-        java:
-          - 11
-          - 17
-          - 21
+        java: [11, 17, 21]
+        scala: [2.13, 3]
     steps:
       - name: Check out
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
-        uses: actions/checkout@v4
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 11
           distribution: temurin
           cache: "gradle"
+
       - name: Setup Gradle and run build
         uses: gradle/actions/setup-gradle@v4
+
       - name: Build
-        run: ./gradlew build
         env:
-          CHECK_GENERATED_FILES: true
           SMOKE_TEST_JAVA_VERSION: ${{ matrix.java }} # the smoke tests will pick this up
+          SMOKE_TEST_SCALA_VERSION: ${{ matrix.scala }} # the smoke tests will pick this up
+        run: |
+          ./gradlew smoke-tests-images:http4s:jibDockerBuild
+          ./gradlew build

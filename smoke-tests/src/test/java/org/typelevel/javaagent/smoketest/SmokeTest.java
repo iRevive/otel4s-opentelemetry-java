@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.example.javaagent.smoketest;
+package org.typelevel.javaagent.smoketest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,13 +40,21 @@ abstract class SmokeTest {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+  // use JDK 11 for local tests
+  private static final int SMOKE_TEST_JAVA_VERSION =
+          Integer.parseInt(Objects.requireNonNullElse(System.getenv("SMOKE_TEST_JAVA_VERSION"), "11"));
+
+  // use Scala 3 for local tests
+  private static final String SMOKE_TEST_SCALA_VERSION =
+          Objects.requireNonNullElse(System.getenv("SMOKE_TEST_SCALA_VERSION"), "3");
+
   protected static OkHttpClient client = OkHttpUtils.client();
 
   private static final Network network = Network.newNetwork();
   protected static final String agentPath =
       System.getProperty("io.opentelemetry.smoketest.agent.shadowJar.path");
 
-  protected abstract String getTargetImage(int jdk);
+  protected abstract String getTargetImage(int jdk, String scala);
 
   protected abstract WaitStrategy getTargetWaitStrategy();
 
@@ -71,9 +80,9 @@ abstract class SmokeTest {
 
   protected GenericContainer target;
 
-  void startTarget(int jdk) {
+  void startTarget() {
     target =
-        new GenericContainer<>(getTargetImage(jdk))
+        new GenericContainer<>(getTargetImage(SMOKE_TEST_JAVA_VERSION, SMOKE_TEST_SCALA_VERSION))
             .withExposedPorts(8080)
             .withNetwork(network)
             .withLogConsumer(new Slf4jLogConsumer(logger))
@@ -82,10 +91,9 @@ abstract class SmokeTest {
             .withEnv("JAVA_TOOL_OPTIONS", "-javaagent:/opentelemetry-javaagent.jar")
             .withEnv("OTEL_BSP_MAX_EXPORT_BATCH", "1")
             .withEnv("OTEL_BSP_SCHEDULE_DELAY", "10")
-            // TODO (heya) update smoke tests to run using http/protobuf
-            // in the meantime, force smoke tests to use grpc protocol for all exporters
+            .withEnv("OTEL_PROPAGATORS", "tracecontext,baggage")
+            .withEnv("OTEL_EXPORTER_OTLP_ENDPOINT", "http://backend:8080")
             .withEnv("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc")
-            .withEnv("OTEL_PROPAGATORS", "tracecontext,baggage,demo")
             .withEnv(getExtraEnv())
             .waitingFor(getTargetWaitStrategy());
     target.start();

@@ -9,6 +9,7 @@ pluginManagement {
 
   plugins {
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    id("com.google.cloud.tools.jib") version "3.4.5"
   }
 }
 
@@ -18,9 +19,11 @@ include "opentelemetry-api-shaded-for-instrumenting"
 
 include "agent"
 include "bootstrap"
+include "custom"
 include "instrumentation"
 include "instrumentation:cats-effect-common-3.6"
 include "instrumentation:cats-effect-3.6"
 include "instrumentation:otel4s-0.13"
-// include "smoke-tests"
+include "smoke-tests-images:http4s"
+include "smoke-tests"
 include "testing:agent-for-testing"

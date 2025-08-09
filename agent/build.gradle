@@ -31,6 +31,7 @@ configurations {
 dependencies {
   bootstrapLibs(project(":bootstrap"))
 
+  javaagentLibs(project(":custom"))
   javaagentLibs(project(":instrumentation:cats-effect-common-3.6"))
   javaagentLibs(project(":instrumentation:cats-effect-3.6"))
   javaagentLibs(project(":instrumentation:otel4s-0.13"))
@@ -120,6 +121,8 @@ tasks {
     }
     exclude("**/module-info.class")
     relocatePackages(it)
+
+    archiveFileName = "otel4s-opentelemetry-javaagent.jar"
 
     manifest {
       attributes.put("Main-Class", "io.opentelemetry.javaagent.OpenTelemetryAgent")

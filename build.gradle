@@ -12,6 +12,7 @@ buildscript {
     classpath "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
     classpath "com.gradleup.shadow:shadow-gradle-plugin:8.3.8"
     classpath "io.opentelemetry.instrumentation:gradle-plugins:2.18.1-alpha"
+    classpath("org.apache.httpcomponents:httpclient:4.5.14")
   }
 }
 
