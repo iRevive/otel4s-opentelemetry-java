@@ -16,8 +16,8 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-OpenTelemetry SDK: 1.52.0.   
-OpenTelemetry Java Agent: 2.18.1.
+- OpenTelemetry SDK: 1.52.0
+- OpenTelemetry Java Agent: 2.18.1
 
 ## Getting started
 
@@ -91,3 +91,22 @@ to configure the bootstrap's shared context.
 
 Check the https://github.com/open-telemetry/opentelemetry-java-instrumentation/pull/13576 for more information.
 
+## Development
+
+### How to run smoke tests
+
+Scala 2.13:
+```shell
+$ export SMOKE_TEST_JAVA_VERSION=11 
+$ export SMOKE_TEST_SCALA_VERSION=2.13
+$ ./gradlew smoke-tests-images:http4s:jibDockerBuild -Djib.dockerClient.executable=$(which docker)                         
+$ ./gradlew smoke-tests:build
+```
+
+Scala 3:
+```shell
+$ export SMOKE_TEST_JAVA_VERSION=11 
+$ export SMOKE_TEST_SCALA_VERSION=3
+$ ./gradlew smoke-tests-images:http4s:jibDockerBuild -Djib.dockerClient.executable=$(which docker)                         
+$ ./gradlew smoke-tests:build
+```
