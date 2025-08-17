@@ -28,7 +28,7 @@ lazy val service = project
   .in(file("service"))
   .settings(
     name := "service",
-    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "0.0.2", // <1>
+    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "0.0.3", // <1>
     run / fork  := true,                                                            // <2>
     javaOptions += "-Dcats.effect.trackFiberContext=true",                          // <3>
     libraryDependencies ++= Seq(                                                    // <4>
