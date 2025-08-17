@@ -16,8 +16,8 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-- OpenTelemetry SDK: 1.52.0
-- OpenTelemetry Java Agent: 2.18.1
+- OpenTelemetry SDK: 1.53.0
+- OpenTelemetry Java Agent: 2.19.0
 
 ## Getting started
 
@@ -118,7 +118,7 @@ $ SDK_VERSION="1.52.0"
 $ AGENT_VERSION="2.18.2"
 $ RELEASE_VERSION="0.0.2"
 $ ./scripts/update-sdk-version.sh $SDK_VERSION
-$ ./scripts/update-version.sh $AGENT_VERSION
+$ ./scripts/update-agent-version.sh $AGENT_VERSION
 $ ./scripts/update-release-version.sh RELEASE_VERSION
 ```
 
