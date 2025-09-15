@@ -10,8 +10,8 @@ buildscript {
   }
   dependencies {
     classpath "com.diffplug.spotless:spotless-plugin-gradle:7.2.1"
-    classpath "com.gradleup.shadow:shadow-gradle-plugin:8.3.8"
-    classpath "io.opentelemetry.instrumentation:gradle-plugins:2.19.0-alpha"
+    classpath "com.gradleup.shadow:shadow-gradle-plugin:9.1.0"
+    classpath "io.opentelemetry.instrumentation:gradle-plugins:2.20.0-alpha"
     classpath("org.apache.httpcomponents:httpclient:4.5.14")
   }
 }
@@ -23,7 +23,7 @@ plugins {
 group "io.github.irevive"
 
 // this line is managed by ./scripts/update-release-version.sh
-version "0.0.3"
+version "0.0.4"
 
 nexusPublishing {
   packageGroup.set(rootProject.group.toString())
@@ -49,11 +49,11 @@ subprojects {
   ext {
     versions = [
       // this line is managed by ./scripts/update-sdk-version.sh
-      opentelemetrySdk           : "1.53.0",
+      opentelemetrySdk           : "1.54.0",
 
       // these lines are managed by ./scripts/update-agent-version.sh
-      opentelemetryJavaagent     : "2.19.0",
-      opentelemetryJavaagentAlpha: "2.19.0-alpha",
+      opentelemetryJavaagent     : "2.20.0",
+      opentelemetryJavaagentAlpha: "2.20.0-alpha",
 
       autoservice                : "1.1.1"
     ]

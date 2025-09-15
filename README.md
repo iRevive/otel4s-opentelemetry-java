@@ -16,8 +16,8 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-- OpenTelemetry SDK: 1.53.0
-- OpenTelemetry Java Agent: 2.19.0
+- OpenTelemetry SDK: 1.54.0
+- OpenTelemetry Java Agent: 2.20.0
 
 ## Getting started
 
@@ -28,7 +28,7 @@ lazy val service = project
   .in(file("service"))
   .settings(
     name := "service",
-    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "0.0.3", // <1>
+    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "0.0.4", // <1>
     run / fork  := true,                                                            // <2>
     javaOptions += "-Dcats.effect.trackFiberContext=true",                          // <3>
     libraryDependencies ++= Seq(                                                    // <4>
@@ -114,12 +114,12 @@ $ ./gradlew smoke-tests:build
 ## New version release
 
 ```shell
-$ SDK_VERSION="1.52.0"
-$ AGENT_VERSION="2.18.2"
-$ RELEASE_VERSION="0.0.2"
+$ SDK_VERSION="1.54.0"
+$ AGENT_VERSION="2.20.0"
+$ RELEASE_VERSION="0.0.3"
 $ ./scripts/update-sdk-version.sh $SDK_VERSION
 $ ./scripts/update-agent-version.sh $AGENT_VERSION
-$ ./scripts/update-release-version.sh RELEASE_VERSION
+$ ./scripts/update-release-version.sh $RELEASE_VERSION
 ```
 
 Once the CI is green, you can publish a tag:
