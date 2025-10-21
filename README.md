@@ -16,8 +16,8 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-- OpenTelemetry SDK: 1.54.0
-- OpenTelemetry Java Agent: 2.20.0
+- OpenTelemetry SDK: 1.55.0
+- OpenTelemetry Java Agent: 2.21.0
 
 ## Getting started
 
@@ -28,10 +28,10 @@ lazy val service = project
   .in(file("service"))
   .settings(
     name := "service",
-    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "0.0.4", // <1>
-    run / fork  := true,                                                            // <2>
-    javaOptions += "-Dcats.effect.trackFiberContext=true",                          // <3>
-    libraryDependencies ++= Seq(                                                    // <4>
+    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "2.21.0", // <1>
+    run / fork  := true,                                                             // <2>
+    javaOptions += "-Dcats.effect.trackFiberContext=true",                           // <3>
+    libraryDependencies ++= Seq(                                                     // <4>
       "org.typelevel"   %% "otel4s-oteljava"                           % "0.13.1",
       "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "0.13.1",
       "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.52.0" % Runtime,
