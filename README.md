@@ -16,8 +16,8 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-- OpenTelemetry SDK: 1.55.0
-- OpenTelemetry Java Agent: 2.21.0
+- OpenTelemetry SDK: 1.56.0
+- OpenTelemetry Java Agent: 2.22.0
 
 ## Getting started
 
@@ -28,14 +28,14 @@ lazy val service = project
   .in(file("service"))
   .settings(
     name := "service",
-    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "2.21.0", // <1>
+    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "2.22.0", // <1>
     run / fork  := true,                                                             // <2>
     javaOptions += "-Dcats.effect.trackFiberContext=true",                           // <3>
     libraryDependencies ++= Seq(                                                     // <4>
-      "org.typelevel"   %% "otel4s-oteljava"                           % "0.13.1",
-      "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "0.13.1",
-      "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.52.0" % Runtime,
-      "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.52.0" % Runtime
+      "org.typelevel"   %% "otel4s-oteljava"                           % "0.14.0",
+      "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "0.14.0",
+      "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.56.0" % Runtime,
+      "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.56.0" % Runtime
     )
   )
 ```
@@ -114,9 +114,9 @@ $ ./gradlew smoke-tests:build
 ## New version release
 
 ```shell
-$ SDK_VERSION="1.54.0"
-$ AGENT_VERSION="2.20.0"
-$ RELEASE_VERSION="0.0.3"
+$ SDK_VERSION="1.56.0"
+$ AGENT_VERSION="2.22.0"
+$ RELEASE_VERSION="2.22.0"
 $ ./scripts/update-sdk-version.sh $SDK_VERSION
 $ ./scripts/update-agent-version.sh $AGENT_VERSION
 $ ./scripts/update-release-version.sh $RELEASE_VERSION
@@ -124,6 +124,6 @@ $ ./scripts/update-release-version.sh $RELEASE_VERSION
 
 Once the CI is green, you can publish a tag:
 ```shell
-$ git tag -a v0.0.2 -m "v0.0.2"
-$ git push origin v0.0.2
+$ git tag -a v2.22.0 -m "v2.22.0"
+$ git push origin v2.22.0
 ```
