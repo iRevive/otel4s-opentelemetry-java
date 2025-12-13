@@ -35,3 +35,8 @@ jobs:
           SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
           SONATYPE_KEY: ${{ secrets.SONATYPE_KEY }}
         run: ./gradlew assemble publishToSonatype closeAndReleaseSonatypeStagingRepository
+
+      - name: Attach agent jar
+        uses: softprops/action-gh-release@v2
+        with:
+          files: agent/build/libs/agent-${{ github.ref_name }}.jar
