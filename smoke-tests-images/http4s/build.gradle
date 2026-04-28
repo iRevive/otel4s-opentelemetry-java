@@ -30,9 +30,9 @@ def catsEffectVersion = resolvePinnedVersion("catsEffect", catsEffectVersionPref
 
 dependencies {
   if (scalaVersion == "3") {
-    implementation "org.scala-lang:scala3-library_3:3.7.2"
+    implementation "org.scala-lang:scala3-library_3:3.8.3"
   } else {
-    implementation "org.scala-lang:scala-library:2.13.16"
+    implementation "org.scala-lang:scala-library:3.8.3"
   }
 
   implementation("org.typelevel:otel4s-oteljava_$scalaVersion:$otel4sVersion")
