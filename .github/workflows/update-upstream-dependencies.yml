@@ -1,0 +1,62 @@
+name: Update Upstream Dependencies
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"
+  workflow_dispatch:
+    inputs:
+      sdk_version:
+        description: "Override SDK version"
+        required: false
+        type: string
+      agent_version:
+        description: "Override Java agent version"
+        required: false
+        type: string
+      release_version:
+        description: "Override release version"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-upstream-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Update pinned upstream dependencies
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SDK_VERSION_OVERRIDE: ${{ inputs.sdk_version || '' }}
+          AGENT_VERSION_OVERRIDE: ${{ inputs.agent_version || '' }}
+          RELEASE_VERSION_OVERRIDE: ${{ inputs.release_version || '' }}
+        run: ./.github/scripts/update-upstream-dependencies.sh
+
+      - name: Create pull request
+        if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          commit-message: ${{ steps.update.outputs.commit_title }}
+          branch: update/upstream-dependencies
+          delete-branch: true
+          title: ${{ steps.update.outputs.commit_title }}
+          body: |
+            Automated update of pinned upstream OpenTelemetry dependencies.
+
+            Updated versions:
+            - OpenTelemetry SDK: `${{ steps.update.outputs.sdk_version }}`
+            - OpenTelemetry Java agent: `${{ steps.update.outputs.agent_version }}`
+            - Project release version: `${{ steps.update.outputs.release_version }}`
+
+            Notes:
+            - Generic dependency maintenance is handled by Dependabot.
+            - `otel4s` and Cats Effect compatibility pins are intentionally excluded from this workflow until they are centralized for the baseline/latest matrix policy.

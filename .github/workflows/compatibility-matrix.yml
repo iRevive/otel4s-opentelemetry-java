@@ -1,0 +1,95 @@
+name: Smoke Test Compatibility Matrix
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lane: latest-latest-jdk11-scala213
+            java: 11
+            scala: "2.13"
+            otel4s_version: latest
+            cats_effect_version: latest
+          - lane: latest-latest-jdk11-scala3
+            java: 11
+            scala: "3"
+            otel4s_version: latest
+            cats_effect_version: latest
+          - lane: latest-latest-jdk17-scala213
+            java: 17
+            scala: "2.13"
+            otel4s_version: latest
+            cats_effect_version: latest
+          - lane: latest-latest-jdk17-scala3
+            java: 17
+            scala: "3"
+            otel4s_version: latest
+            cats_effect_version: latest
+          - lane: latest-latest-jdk21-scala213
+            java: 21
+            scala: "2.13"
+            otel4s_version: latest
+            cats_effect_version: latest
+          - lane: latest-latest-jdk21-scala3
+            java: 21
+            scala: "3"
+            otel4s_version: latest
+            cats_effect_version: latest
+          - lane: baseline-latest-jdk17-scala213
+            java: 17
+            scala: "2.13"
+            otel4s_version: baseline
+            cats_effect_version: latest
+          - lane: baseline-latest-jdk17-scala3
+            java: 17
+            scala: "3"
+            otel4s_version: baseline
+            cats_effect_version: latest
+          - lane: latest-baseline-jdk17-scala213
+            java: 17
+            scala: "2.13"
+            otel4s_version: latest
+            cats_effect_version: baseline
+          - lane: latest-baseline-jdk17-scala3
+            java: 17
+            scala: "3"
+            otel4s_version: latest
+            cats_effect_version: baseline
+          - lane: baseline-baseline-jdk17-scala213
+            java: 17
+            scala: "2.13"
+            otel4s_version: baseline
+            cats_effect_version: baseline
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: "gradle"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        env:
+          SMOKE_TEST_JAVA_VERSION: ${{ matrix.java }}
+          SMOKE_TEST_SCALA_VERSION: ${{ matrix.scala }}
+          SMOKE_TEST_OTEL4S_VERSION: ${{ matrix.otel4s_version }}
+          SMOKE_TEST_CATS_EFFECT_VERSION: ${{ matrix.cats_effect_version }}
+        run: |
+          ./gradlew smoke-tests-images:http4s:jibDockerBuild
+          ./gradlew build

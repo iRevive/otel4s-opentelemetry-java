@@ -127,3 +127,32 @@ Once the CI is green, you can publish a tag:
 $ git tag -a v2.27.0 -m "v2.27.0"
 $ git push origin v2.27.0
 ```
+
+## Dependency updates
+
+- Dependabot handles generic Gradle and GitHub Actions maintenance.
+- `.github/workflows/update-upstream-dependencies.yml` opens PRs for pinned upstream OpenTelemetry SDK/agent updates.
+- `.github/workflows/update-smoke-test-latest-versions.yml` opens PRs that bump only the smoke-test `Latest` pins in `smoke-tests-images/http4s/smoke-test-versions.gradle`.
+
+## Compatibility testing
+
+The instrumentation modules stay pinned to their authored/tested versions.
+Baseline/latest lane selection is supported for the smoke-test application only.
+
+Pinned smoke-test versions live in `smoke-tests-images/http4s/smoke-test-versions.gradle`.
+
+To build the smoke-test image and run the smoke tests against a chosen compatibility lane locally:
+
+```shell
+$ export SMOKE_TEST_OTEL4S_VERSION=baseline
+$ export SMOKE_TEST_CATS_EFFECT_VERSION=latest
+$ ./gradlew smoke-tests-images:http4s:jibDockerBuild
+$ ./gradlew smoke-tests:build
+```
+
+`.github/workflows/compatibility-matrix.yml` runs on every PR and executes a pruned smoke-test matrix:
+
+- `latest/latest` across Scala `2.13`, `3` and JDK `11`, `17`, `21`
+- `baseline/latest` on JDK `17` for Scala `2.13`, `3`
+- `latest/baseline` on JDK `17` for Scala `2.13`, `3`
+- `baseline/baseline` on JDK `17` for Scala `2.13`
