@@ -1,0 +1,54 @@
+name: Update Smoke Test Latest Versions
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+    inputs:
+      otel4s_version:
+        description: "Override otel4s latest pin"
+        required: false
+        type: string
+      cats_effect_version:
+        description: "Override Cats Effect latest pin"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-smoke-test-latest-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Update smoke-test latest pins
+        id: update
+        env:
+          GH_TOKEN: ${{ github.token }}
+          OTEL4S_VERSION_OVERRIDE: ${{ inputs.otel4s_version || '' }}
+          CATS_EFFECT_VERSION_OVERRIDE: ${{ inputs.cats_effect_version || '' }}
+        run: ./.github/scripts/update-smoke-test-latest-versions.sh
+
+      - name: Create pull request
+        if: steps.update.outputs.updated == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          commit-message: ${{ steps.update.outputs.commit_title }}
+          branch: update/smoke-test-latest-versions
+          delete-branch: true
+          title: ${{ steps.update.outputs.commit_title }}
+          body: |
+            Automated update of smoke-test `latest` compatibility pins.
+
+            Updated versions:
+            - otel4s latest: `${{ steps.update.outputs.otel4s_version }}`
+            - Cats Effect latest: `${{ steps.update.outputs.cats_effect_version }}`
+
+            Only the `Latest` entries in `smoke-tests-images/http4s/smoke-test-versions.gradle` are updated by this workflow.

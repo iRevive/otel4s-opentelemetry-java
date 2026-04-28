@@ -1,0 +1,6 @@
+ext.smokeTestVersions = [
+  otel4sBaseline    : "0.15.2",
+  otel4sLatest      : "1.0.0-RC1",
+  catsEffectBaseline: "3.6.0",
+  catsEffectLatest  : "3.7.0",
+]

@@ -3,12 +3,30 @@ plugins {
   id 'com.google.cloud.tools.jib'
 }
 
+apply from: "$projectDir/smoke-test-versions.gradle"
+
 repositories {
   mavenCentral()
 }
 
 def scalaVersion = System.getenv("SMOKE_TEST_SCALA_VERSION") ?: "3"
 def http4sVersion = "0.23.30"
+def otel4sVersionPreference = System.getenv("SMOKE_TEST_OTEL4S_VERSION") ?: "latest"
+def catsEffectVersionPreference = System.getenv("SMOKE_TEST_CATS_EFFECT_VERSION") ?: "latest"
+
+def resolvePinnedVersion = { String dependency, String version ->
+  def normalizedVersion = version.toLowerCase(Locale.ROOT)
+  if (normalizedVersion == "baseline") {
+    return smokeTestVersions["${dependency}Baseline"]
+  }
+  if (normalizedVersion == "latest") {
+    return smokeTestVersions["${dependency}Latest"]
+  }
+  throw new GradleException("Unsupported ${dependency} version '${version}'. Expected 'baseline' or 'latest'.")
+}
+
+def otel4sVersion = resolvePinnedVersion("otel4s", otel4sVersionPreference)
+def catsEffectVersion = resolvePinnedVersion("catsEffect", catsEffectVersionPreference)
 
 dependencies {
   if (scalaVersion == "3") {
@@ -16,6 +34,10 @@ dependencies {
   } else {
     implementation "org.scala-lang:scala-library:2.13.16"
   }
+
+  implementation("org.typelevel:otel4s-oteljava_$scalaVersion:$otel4sVersion")
+  implementation("org.typelevel:otel4s-oteljava-context-storage_$scalaVersion:$otel4sVersion")
+  implementation("org.typelevel:cats-effect_$scalaVersion:$catsEffectVersion")
 
   implementation("io.opentelemetry:opentelemetry-api:${versions.opentelemetrySdk}")
   implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:${versions.opentelemetryJavaagent}")
