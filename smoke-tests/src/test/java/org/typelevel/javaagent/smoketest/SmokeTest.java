@@ -1,6 +1,4 @@
 /*
- * Copyright The OpenTelemetry Authors
- * SPDX-License-Identifier: Apache-2.0
  */
 
 package org.typelevel.javaagent.smoketest;
@@ -42,11 +40,11 @@ abstract class SmokeTest {
 
   // use JDK 11 for local tests
   private static final int SMOKE_TEST_JAVA_VERSION =
-          Integer.parseInt(Objects.requireNonNullElse(System.getenv("SMOKE_TEST_JAVA_VERSION"), "11"));
+      Integer.parseInt(Objects.requireNonNullElse(System.getenv("SMOKE_TEST_JAVA_VERSION"), "11"));
 
   // use Scala 3 for local tests
   private static final String SMOKE_TEST_SCALA_VERSION =
-          Objects.requireNonNullElse(System.getenv("SMOKE_TEST_SCALA_VERSION"), "3");
+      Objects.requireNonNullElse(System.getenv("SMOKE_TEST_SCALA_VERSION"), "3");
 
   protected static OkHttpClient client = OkHttpUtils.client();
 

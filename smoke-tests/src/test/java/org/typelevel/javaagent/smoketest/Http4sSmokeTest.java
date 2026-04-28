@@ -1,6 +1,4 @@
 /*
- * Copyright The OpenTelemetry Authors
- * SPDX-License-Identifier: Apache-2.0
  */
 
 package org.typelevel.javaagent.smoketest;
@@ -23,11 +21,7 @@ class Http4sSmokeTest extends SmokeTest {
 
   @Override
   protected String getTargetImage(int jdk, String scala) {
-    return "smoke-test-http4s:jdk"
-        + jdk
-        + "-scala"
-        + scala
-        + "-latest";
+    return "smoke-test-http4s:jdk" + jdk + "-scala" + scala + "-latest";
   }
 
   @Override
@@ -63,7 +57,7 @@ class Http4sSmokeTest extends SmokeTest {
     Assertions.assertNotEquals(
         0, countResourcesByValue(traces, "telemetry.distro.version", currentAgentVersion));
     Assertions.assertNotEquals(
-            0, countResourcesByValue(traces, "telemetry.distro.name", "otel4s-opentelemetry-java"));
+        0, countResourcesByValue(traces, "telemetry.distro.name", "otel4s-opentelemetry-java"));
 
     stopTarget();
   }

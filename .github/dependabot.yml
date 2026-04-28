@@ -30,5 +30,6 @@ updates:
       - dependency-name: "io.opentelemetry:*"
       - dependency-name: "io.opentelemetry.instrumentation:*"
       - dependency-name: "io.opentelemetry.javaagent:*"
+      - dependency-name: "io.opentelemetry.javaagent.instrumentation:*"
       - dependency-name: "org.typelevel:cats-effect_*"
       - dependency-name: "org.typelevel:otel4s-*"
