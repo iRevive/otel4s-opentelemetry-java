@@ -1,6 +1,4 @@
 /*
- * Copyright The OpenTelemetry Authors
- * SPDX-License-Identifier: Apache-2.0
  */
 
 package io.opentelemetry.javaagent.bootstrap.catseffect.v3_6;
@@ -10,7 +8,8 @@ import io.opentelemetry.context.Scope;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
-//import javax.annotation.Nullable;
+
+// import javax.annotation.Nullable;
 
 /** The helper stores a reference to the IOLocal#unsafeThreadLocal. */
 public final class FiberLocalContextHelper {
@@ -18,13 +17,13 @@ public final class FiberLocalContextHelper {
   private static final Logger logger = Logger.getLogger(FiberLocalContextHelper.class.getName());
 
   private static final AtomicReference<ThreadLocal<Context>> fiberContextThreadLocal =
-          new AtomicReference<>();
+      new AtomicReference<>();
 
   private static final AtomicReference<Supplier<Boolean>> isUnderFiberContextSupplier =
-          new AtomicReference<>(() -> false);
+      new AtomicReference<>(() -> false);
 
   public static void initialize(
-          ThreadLocal<Context> fiberThreadLocal, Supplier<Boolean> isUnderFiberContext) {
+      ThreadLocal<Context> fiberThreadLocal, Supplier<Boolean> isUnderFiberContext) {
     if (fiberContextThreadLocal.compareAndSet(null, fiberThreadLocal)) {
       fiberContextThreadLocal.set(fiberThreadLocal);
       isUnderFiberContextSupplier.set(isUnderFiberContext);
@@ -32,7 +31,7 @@ public final class FiberLocalContextHelper {
     } else {
       if (!fiberContextThreadLocal.get().equals(fiberThreadLocal)) {
         logger.warning(
-                "The fiberThreadLocalContext is already configured. Ignoring subsequent calls.");
+            "The fiberThreadLocalContext is already configured. Ignoring subsequent calls.");
       }
     }
   }
@@ -41,7 +40,7 @@ public final class FiberLocalContextHelper {
     return isUnderFiberContextSupplier.get().get();
   }
 
-  //@Nullable
+  // @Nullable
   public static Context current() {
     ThreadLocal<Context> local = getFiberThreadLocal();
     return local != null ? local.get() : null;
@@ -62,7 +61,7 @@ public final class FiberLocalContextHelper {
     }
   }
 
-  //@Nullable
+  // @Nullable
   private static ThreadLocal<Context> getFiberThreadLocal() {
     return fiberContextThreadLocal.get();
   }
@@ -72,7 +71,7 @@ public final class FiberLocalContextHelper {
     private final Context toAttach;
     private boolean closed;
 
-    private ScopeImpl(/*@Nullable */Context beforeAttach, Context toAttach) {
+    private ScopeImpl(/*@Nullable */ Context beforeAttach, Context toAttach) {
       this.beforeAttach = beforeAttach;
       this.toAttach = toAttach;
     }
@@ -84,7 +83,7 @@ public final class FiberLocalContextHelper {
         FiberLocalContextHelper.fiberContextThreadLocal.get().set(this.beforeAttach);
       } else {
         FiberLocalContextHelper.logger.fine(
-                "Trying to close scope which does not represent current context. Ignoring the call.");
+            "Trying to close scope which does not represent current context. Ignoring the call.");
       }
     }
   }
