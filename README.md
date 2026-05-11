@@ -16,7 +16,7 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-- OpenTelemetry SDK: 1.61.0
+- OpenTelemetry SDK: 1.62.0
 - OpenTelemetry Java Agent: 2.27.0
 
 ## Getting started
@@ -34,8 +34,8 @@ lazy val service = project
     libraryDependencies ++= Seq(                                                     // <4>
       "org.typelevel"   %% "otel4s-oteljava"                           % "0.15.2",
       "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "0.15.2",
-      "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.61.0" % Runtime,
-      "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.61.0" % Runtime
+      "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.62.0" % Runtime,
+      "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.62.0" % Runtime
     )
   )
 ```
@@ -114,7 +114,7 @@ $ ./gradlew smoke-tests:build
 ## New version release
 
 ```shell
-$ SDK_VERSION="1.61.0"
+$ SDK_VERSION="1.62.0"
 $ AGENT_VERSION="2.27.0"
 $ RELEASE_VERSION="2.27.0"
 $ ./scripts/update-sdk-version.sh $SDK_VERSION
