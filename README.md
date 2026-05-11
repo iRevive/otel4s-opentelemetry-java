@@ -32,8 +32,8 @@ lazy val service = project
     run / fork  := true,                                                             // <2>
     javaOptions += "-Dcats.effect.trackFiberContext=true",                           // <3>
     libraryDependencies ++= Seq(                                                     // <4>
-      "org.typelevel"   %% "otel4s-oteljava"                           % "0.15.2",
-      "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "0.15.2",
+      "org.typelevel"   %% "otel4s-oteljava"                           % "1.0.0",
+      "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "1.0.0",
       "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.61.0" % Runtime,
       "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.61.0" % Runtime
     )
