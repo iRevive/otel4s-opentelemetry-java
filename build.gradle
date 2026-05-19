@@ -59,7 +59,7 @@ subprojects {
   ext {
     versions = [
       // this line is managed by ./scripts/update-sdk-version.sh
-      opentelemetrySdk           : "1.61.0",
+      opentelemetrySdk           : "1.62.0",
 
       // these lines are managed by ./scripts/update-agent-version.sh
       opentelemetryJavaagent     : "2.27.0",
