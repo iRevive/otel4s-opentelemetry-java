@@ -16,8 +16,8 @@ See https://github.com/iRevive/otel4s-showcase demo.
 
 ## Versions
 
-- OpenTelemetry SDK: 1.61.0
-- OpenTelemetry Java Agent: 2.27.0
+- OpenTelemetry SDK: 1.62.0
+- OpenTelemetry Java Agent: 2.28.0
 
 ## Getting started
 
@@ -28,14 +28,14 @@ lazy val service = project
   .in(file("service"))
   .settings(
     name := "service",
-    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "2.27.0", // <1>
+    javaAgents += "io.github.irevive" % "otel4s-opentelemetry-javaagent" % "2.28.0", // <1>
     run / fork  := true,                                                             // <2>
     javaOptions += "-Dcats.effect.trackFiberContext=true",                           // <3>
     libraryDependencies ++= Seq(                                                     // <4>
       "org.typelevel"   %% "otel4s-oteljava"                           % "1.0.0",
       "org.typelevel"   %% "otel4s-oteljava-context-storage"           % "1.0.0",
-      "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.61.0" % Runtime,
-      "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.61.0" % Runtime
+      "io.opentelemetry" % "opentelemetry-exporter-otlp"               % "1.62.0" % Runtime,
+      "io.opentelemetry" % "opentelemetry-sdk-extension-autoconfigure" % "1.62.0" % Runtime
     )
   )
 ```
@@ -114,9 +114,9 @@ $ ./gradlew smoke-tests:build
 ## New version release
 
 ```shell
-$ SDK_VERSION="1.61.0"
-$ AGENT_VERSION="2.27.0"
-$ RELEASE_VERSION="2.27.0"
+$ SDK_VERSION="1.62.0"
+$ AGENT_VERSION="2.28.0"
+$ RELEASE_VERSION="2.28.0"
 $ ./scripts/update-sdk-version.sh $SDK_VERSION
 $ ./scripts/update-agent-version.sh $AGENT_VERSION
 $ ./scripts/update-release-version.sh $RELEASE_VERSION
@@ -124,8 +124,8 @@ $ ./scripts/update-release-version.sh $RELEASE_VERSION
 
 Once the CI is green, you can publish a tag:
 ```shell
-$ git tag -a v2.27.0 -m "v2.27.0"
-$ git push origin v2.27.0
+$ git tag -a v2.28.0 -m "v2.28.0"
+$ git push origin v2.28.0
 ```
 
 ## Dependency updates
