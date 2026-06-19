@@ -5,7 +5,7 @@ package io.opentelemetry.javaagent.instrumentation.catseffect.common.v3_6;
 
 import application.io.opentelemetry.context.Context;
 import cats.effect.IOLocal;
-import io.opentelemetry.javaagent.instrumentation.opentelemetryapi.context.AgentContextStorage;
+import io.opentelemetry.javaagent.instrumentation.opentelemetryapi.v1_0.context.AgentContextStorage;
 
 public class IoLocalContextSingleton {
 
