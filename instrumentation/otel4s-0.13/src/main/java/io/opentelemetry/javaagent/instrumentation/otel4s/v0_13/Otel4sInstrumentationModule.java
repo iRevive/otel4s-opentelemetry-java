@@ -30,10 +30,4 @@ public class Otel4sInstrumentationModule extends InstrumentationModule
   public ElementMatcher.Junction<ClassLoader> classLoaderMatcher() {
     return hasClassesNamed("org.typelevel.otel4s.oteljava.context.IOLocalContextStorage$");
   }
-
-  @Override
-  public String getModuleGroup() {
-    // This module uses the api context bridge helpers, therefore must be in the same classloader
-    return "cats-effect";
-  }
 }
