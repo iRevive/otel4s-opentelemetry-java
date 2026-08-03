@@ -27,7 +27,7 @@ jobs:
           cache: "gradle"
 
       - name: Setup Gradle and run build
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@v6.2.0
 
       - name: Build
         env:

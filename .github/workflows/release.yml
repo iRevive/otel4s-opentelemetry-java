@@ -24,7 +24,7 @@ jobs:
           distribution: temurin
 
       - name: Setup Gradle and run build
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@v6.2.0
         with:
           cache-disabled: "true"
 
