@@ -18,9 +18,6 @@ object Server extends IOApp.Simple {
 
   private val textMapGetter =
     new TextMapGetter[Headers] {
-      def keys(carrier: Headers): java.lang.Iterable[String] =
-        carrier.headers.map(_.name.toString).asJava
-
       def get(carrier: Headers, key: String): String =
         carrier.get(CIString(key)).map(_.head.value).orNull
     }
