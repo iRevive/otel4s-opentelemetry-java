@@ -12,7 +12,7 @@ buildscript {
   dependencies {
     classpath "com.diffplug.spotless:spotless-plugin-gradle:8.11.0"
     classpath "com.gradleup.shadow:shadow-gradle-plugin:9.6.1"
-    classpath "io.opentelemetry.instrumentation:gradle-plugins:2.33.1-alpha"
+    classpath "io.opentelemetry.instrumentation:gradle-plugins:2.34.0-alpha"
     classpath("org.apache.httpcomponents:httpclient:4.5.14")
   }
 }
@@ -26,7 +26,7 @@ apply plugin: "com.diffplug.spotless"
 group "io.github.irevive"
 
 // this line is managed by ./scripts/update-release-version.sh
-version "2.33.1"
+version "2.34.0"
 
 repositories {
   mavenCentral()
@@ -60,11 +60,11 @@ subprojects {
   ext {
     versions = [
       // this line is managed by ./scripts/update-sdk-version.sh
-      opentelemetrySdk           : "1.67.0",
+      opentelemetrySdk           : "1.68.0",
 
       // these lines are managed by ./scripts/update-agent-version.sh
-      opentelemetryJavaagent     : "2.33.1",
-      opentelemetryJavaagentAlpha: "2.33.1-alpha",
+      opentelemetryJavaagent     : "2.34.0",
+      opentelemetryJavaagentAlpha: "2.34.0-alpha",
 
       autoservice                : "1.1.1"
     ]
