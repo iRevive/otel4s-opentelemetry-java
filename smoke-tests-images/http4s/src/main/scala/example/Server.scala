@@ -55,6 +55,9 @@ object Server extends IOApp.Simple {
       }
 
     val routes = HttpRoutes.of[IO] {
+      case GET -> Root / "context" / boundary if Set("netty", "netty-warm", "plain").contains(boundary) =>
+        ContextPropagation.observe(boundary).flatMap(Ok(_))
+
       case req @ GET -> Root / "welcome" / str =>
         withPropagation(req.headers) {
           for {
