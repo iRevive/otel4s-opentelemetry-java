@@ -21,6 +21,17 @@ tasks.test {
   def shadowTask = project(":agent").tasks.shadowJar
   dependsOn(shadowTask)
   inputs.files(layout.files(shadowTask))
+  mustRunAfter(":smoke-tests-images:http4s:jibDockerBuild")
+
+  // The target image is external to the test JVM's classpath. Track its content as well as
+  // the lane selectors so rebuilding an image or switching lanes invalidates test results.
+  inputs.files(project(":smoke-tests-images:http4s").layout.buildDirectory.file("jib-image.id"))
+      .withPropertyName("targetImageId")
+      .withPathSensitivity(PathSensitivity.NONE)
+  ["SMOKE_TEST_JAVA_VERSION": "11", "SMOKE_TEST_SCALA_VERSION": "3",
+   "SMOKE_TEST_OTEL4S_VERSION": "latest", "SMOKE_TEST_CATS_EFFECT_VERSION": "latest"].each { key, fallback ->
+    inputs.property(key, providers.environmentVariable(key).getOrElse(fallback))
+  }
 
   doFirst {
     jvmArgs("-Dio.opentelemetry.smoketest.agent.shadowJar.path=${shadowTask.archiveFile.get()}")

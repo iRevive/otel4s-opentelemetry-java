@@ -3,21 +3,17 @@
 
 package org.typelevel.javaagent.smoketest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import io.opentelemetry.proto.collector.trace.v1.ExportTraceServiceRequest;
 import io.opentelemetry.proto.trace.v1.Span;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
@@ -156,50 +152,28 @@ abstract class SmokeTest {
         .flatMap(it -> it.getSpansList().stream());
   }
 
-  protected Collection<ExportTraceServiceRequest> waitForTraces()
+  protected Collection<ExportTraceServiceRequest> waitForSpans(String... names)
       throws IOException, InterruptedException {
-    String content = waitForContent();
-
-    return StreamSupport.stream(OBJECT_MAPPER.readTree(content).spliterator(), false)
-        .map(
-            it -> {
-              ExportTraceServiceRequest.Builder builder = ExportTraceServiceRequest.newBuilder();
-              // TODO: Register parser into object mapper to avoid de -> re -> deserialize.
-              try {
-                JsonFormat.parser().merge(OBJECT_MAPPER.writeValueAsString(it), builder);
-              } catch (InvalidProtocolBufferException | JsonProcessingException e) {
-                e.printStackTrace();
-              }
-              return builder.build();
-            })
-        .collect(Collectors.toList());
+    return TracePoller.awaitSpans(this::fetchTraces, Duration.ofSeconds(30), names);
   }
 
-  private String waitForContent() throws IOException, InterruptedException {
-    long previousSize = 0;
-    long deadline = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(30);
-    String content = "[]";
-    while (System.currentTimeMillis() < deadline) {
-
-      Request request =
-          new Request.Builder()
-              .url(
-                  String.format(
-                      "http://%s:%d/get-traces", backend.getHost(), backend.getMappedPort(8080)))
-              .build();
-
-      try (ResponseBody body = client.newCall(request).execute().body()) {
-        content = body.string();
-      }
-
-      if (content.length() > 2 && content.length() == previousSize) {
-        break;
-      }
-      previousSize = content.length();
-      System.out.printf("Current content size %d%n", previousSize);
-      TimeUnit.MILLISECONDS.sleep(500);
+  private Collection<ExportTraceServiceRequest> fetchTraces() throws IOException {
+    Request request =
+        new Request.Builder()
+            .url(
+                String.format(
+                    "http://%s:%d/get-traces", backend.getHost(), backend.getMappedPort(8080)))
+            .build();
+    String content;
+    try (ResponseBody body = client.newCall(request).execute().body()) {
+      content = body.string();
     }
-
-    return content;
+    Collection<ExportTraceServiceRequest> traces = new java.util.ArrayList<>();
+    for (com.fasterxml.jackson.databind.JsonNode node : OBJECT_MAPPER.readTree(content)) {
+      ExportTraceServiceRequest.Builder builder = ExportTraceServiceRequest.newBuilder();
+      JsonFormat.parser().merge(OBJECT_MAPPER.writeValueAsString(node), builder);
+      traces.add(builder.build());
+    }
+    return traces;
   }
 }

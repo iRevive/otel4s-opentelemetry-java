@@ -79,8 +79,9 @@ IOLocalContextStorage: agent-provided IOLocal is detected
 
 Cats Effect has its context propagation mechanism known as [IOLocal](https://typelevel.org/cats-effect/docs/core/io-local). The [3.6.0](https://github.com/typelevel/cats-effect/releases/tag/v3.6.0) release provides a way to represent IOLocal as a `ThreadLocal`, which creates an opportunity to manipulate the context from the outside.
 
-- Agent instruments the constructor of `IORuntime` and stores a `ThreadLocal` representation of the `IOLocal[Context]` in the **bootstrap** classloader, so the agent and application both access the same instance
+- Agent instruments the constructor of `IORuntime` and registers a context storage adapter in the **bootstrap** classloader. The adapter uses a `ThreadLocal` view of the application's `IOLocal[Context]`, so the agent and application share the same context
 - Instrumentation installs a custom `ContextStorage` wrapper (for the agent context storage). This wrapper uses `FiberLocalContextHelper` to retrieve the fiber's current context (if available)
+- Scopes save and restore the application context directly. Agent/application context conversion can change object identity, so scope cleanup compares the context stored in `IOLocal` rather than converting it back to the agent API
 - Agent instruments `IOFiber`'s constructor and starts the fiber with the currently available context
 
 ## Limitations

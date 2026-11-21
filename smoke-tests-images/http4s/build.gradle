@@ -44,6 +44,9 @@ dependencies {
 
   implementation("org.http4s:http4s-ember-server_$scalaVersion:$http4sVersion")
   implementation("org.http4s:http4s-dsl_$scalaVersion:$http4sVersion")
+
+  // Keep the HTTP codec on the classpath so the agent enables its Netty instrumentation.
+  implementation("io.netty:netty-codec-http:4.1.133.Final")
 }
 
 def targetJDK = System.getenv("SMOKE_TEST_JAVA_VERSION") ?: "11"
@@ -55,6 +58,14 @@ java {
   // (it seems the jib plugins does not understand toolchains yet)
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+// The application stays Java 8 compatible for Jib, while JUnit 6 runs on the build JDK (17+).
+[configurations.testCompileClasspath, configurations.testRuntimeClasspath].each {
+  it.attributes.attribute(org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 17)
+}
+tasks.named("compileTestJava") {
+  options.release.set(17)
 }
 
 jib {

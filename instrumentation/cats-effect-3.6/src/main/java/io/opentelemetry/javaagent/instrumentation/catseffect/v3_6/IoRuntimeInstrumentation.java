@@ -35,7 +35,7 @@ public class IoRuntimeInstrumentation implements TypeInstrumentation {
     @Advice.OnMethodEnter(suppress = Throwable.class)
     public static void onEnter() {
       FiberLocalContextHelper.initialize(
-          IoLocalContextSingleton.contextThreadLocal, IORuntime::isUnderFiberContext);
+          IoLocalContextSingleton.contextStorage, IORuntime::isUnderFiberContext);
     }
   }
 }
