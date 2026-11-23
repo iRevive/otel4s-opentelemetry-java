@@ -46,7 +46,7 @@ dependencies {
   implementation("org.http4s:http4s-dsl_$scalaVersion:$http4sVersion")
 
   // Keep the HTTP codec on the classpath so the agent enables its Netty instrumentation.
-  implementation("io.netty:netty-codec-http:4.1.133.Final")
+  implementation("io.netty:netty-codec-http:4.2.21.Final")
 }
 
 def targetJDK = System.getenv("SMOKE_TEST_JAVA_VERSION") ?: "11"
